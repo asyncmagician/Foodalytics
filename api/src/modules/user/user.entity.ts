@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Food } from '../food/food.entity';
 
 @Entity()
@@ -19,11 +19,7 @@ export class User {
     @Column()
     password: string;
 
-    @OneToMany(() => Food, food => food.user)
+    @OneToMany(() => Food, food => food.user, { nullable: true })
     foods: Food[];
-}
-
-function OneToMany(arg0: () => any, arg1: (food: any) => any): (target: User, propertyKey: "foods") => void {
-    throw new Error('Function not implemented.');
 }
 

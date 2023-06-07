@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
 import { Food } from '../food/food.entity';
 import { User } from '../user/user.entity';
 
@@ -21,24 +21,9 @@ export class Categories {
       })
       choice: CategoryChoice;
 
-    @ManyToMany(() => Food)
+    @ManyToMany(() => Food, { nullable: true })
     @JoinTable()
     food: Food[]
 
-    @ManyToOne(() => User, user => user.categories)
-    user: User;
-
-}
-
-function ManyToMany(arg0: () => typeof Food): (target: Categories, propertyKey: "food") => void {
-    throw new Error('Function not implemented.');
-}
-
-
-function JoinTable(): (target: Categories, propertyKey: "food") => void {
-    throw new Error('Function not implemented.');
-}
-function ManyToOne(arg0: () => any, arg1: (user: any) => any): (target: Categories, propertyKey: "user") => void {
-    throw new Error('Function not implemented.');
 }
 
