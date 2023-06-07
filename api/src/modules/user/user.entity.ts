@@ -21,5 +21,6 @@ export class User {
 
     @OneToMany(() => Food, food => food.user, { nullable: true })
     foods: Food[];
+    categories: any;
 }
 
