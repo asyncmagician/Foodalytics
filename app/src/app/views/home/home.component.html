@@ -1,1 +1,49 @@
-<p>home works!</p>
+<a *ngIf="jwt" mat-raised-button color="primary" routerLink="/ajout-article">
+  Ajouter un article
+</a>
+
+<div class="row">
+  <div *ngFor="let food of foodList" class="col-6">
+    <mat-card class="mt-4">
+      <mat-card-header>
+        <div mat-card-avatar></div>
+        <mat-card-title>{{ food.name }}</mat-card-title>
+        <mat-card-subtitle>#{{ food.id }}</mat-card-subtitle>
+      </mat-card-header>
+      <img
+        *ngIf="food.img"
+        mat-card-image
+        src="http://localhost:3000/{{ food.img }}"
+        alt="Image du produit"
+      />
+      <mat-card-content>
+        <p>
+          Calories : <span>{{ food.calorie }}</span>
+          <br>
+          Lipides : <span>{{ food.lipid }}</span>
+          <br>
+          Glucides : <span>{{ food.carbohydrate }}</span>
+          <br>
+          Protéines : <span>{{ food.protein }}</span>
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <a
+          *ngIf="jwt?.admin"
+          mat-button
+          color="primary"
+          [routerLink]="['/modifier-produit', food.id]"
+        >Modifier</a
+        >
+        <button
+          *ngIf="jwt?.admin"
+          mat-button
+          color="warn"
+          (click)="onFoodDelete(food.id)"
+        >
+          Supprimer
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
