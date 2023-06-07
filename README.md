@@ -14,7 +14,7 @@ Foodalytics is a 100% open-source angular web application designed to facilitate
 git clone https://github.com/asyncmagician/Foodalytics.git
 ```
 
-Navigate to the `.app/` and `./api` dependencies and install:
+- Navigate to the `.app/` and `./api` folder and install dependencies:
 ```bash
 cd app
 npm install
