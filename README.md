@@ -4,9 +4,9 @@ Foodalytics is a 100% open-source angular web application designed to facilitate
 
 ## Getting Started
 ###  Prerequisites
-[Node.js](https://nodejs.org/en)
-[Angular CLI](https://angular.io/cli)
-[Nest.js](https://nestjs.com/nos)
+- [Node.js](https://nodejs.org/en)
+- [Angular CLI](https://angular.io/cli)
+- [Nest.js](https://nestjs.com/nos)
 
 ## Installation
 - Clone the repository:
