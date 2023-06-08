@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
@@ -13,11 +13,22 @@ export class FoodCategoriesService {
         private readonly foodCategoriesRepository: Repository<FoodCategories>,
         private readonly foodService: FoodService,
         private readonly categoriesService: CategoriesService,
-    ) {
-    }
+    ) {}
 
-    async findAll(): Promise<FoodCategories[]> {
-        return this.foodCategoriesRepository.find();
+    async findAll(
+        idFood?: string,
+        idCategories?: string,
+    ): Promise<FoodCategories[]> {
+        return this.foodCategoriesRepository.find({
+            where: {
+                food: {
+                    id: idFood,
+                },
+                categories: {
+                    id: idCategories,
+                },
+            },
+        });
     }
 
     async findOne(id: string): Promise<FoodCategories> {
@@ -45,56 +56,38 @@ export class FoodCategoriesService {
             );
         }
 
-        const newFoodCategories = new FoodCategories();
-        newFoodCategories.id = uuidv4();
-        newFoodCategories.food = food;
-        newFoodCategories.categories = categories;
-
-        return this.foodCategoriesRepository.save(newFoodCategories);
-    }
-
-    async updateCategoriesFoods(
-        categoriesId: string,
-        newFoods: Array<string>,
-    ): Promise<FoodCategories[]> {
-        for (const foodId of newFoods) {
-            const foodExist = await this.foodCategoriesRepository.exist({
-                where: {
-                    food: {
-                        id: foodId,
-                    },
-                    categories: {
-                        id: categoriesId,
-                    },
-                },
-            });
-            if (foodExist) {
-                continue;
-            }
-
-            const newFoodCategories = new FoodCategories();
-            newFoodCategories.food = await this.foodService.findOne(foodId);
-            newFoodCategories.categories = await this.categoriesService.findOne(
-                categoriesId,
-            );
-            await this.foodCategoriesRepository.insert(newFoodCategories);
-        }
-
-        return await this.foodCategoriesRepository.find({
+        const foodCategoriesExist = await this.foodCategoriesRepository.exist({
             where: {
-                categories: {
-                    id: categoriesId,
-                },
+                food: food,
+                categories: categories,
             },
         });
+
+        if (!foodCategoriesExist) {
+            const newFoodCategories = new FoodCategories();
+            newFoodCategories.id = uuidv4();
+            newFoodCategories.food = food;
+            newFoodCategories.categories = categories;
+
+            return this.foodCategoriesRepository.save(newFoodCategories);
+        }
     }
 
-    async delete(id: string): Promise<void> {
-        const deleteResult = await this.foodCategoriesRepository.delete(id);
+    async delete(foodId: string, categoriesId: string): Promise<void> {
+        const deleteResult = await this.foodCategoriesRepository.delete({
+            food: {
+                id: foodId,
+            },
+            categories: {
+                id: categoriesId,
+            },
+        });
         if (deleteResult.affected === 0) {
-            throw new NotFoundException(
-                `Food categories with ID ${id} not found`,
-            );
+            throw new NotFoundException(`Food categories not found`);
         }
+    }
+
+    async deleteById(id: string) {
+        return this.foodCategoriesRepository.delete(id);
     }
 }
