@@ -117,10 +117,20 @@ export class CategoriesController {
     }
 
     @Put(":id")
-    update(@Param("id") id: string, @Body() categories: Partial<Categories>) {
+    update(
+        @Param("id") id: string,
+        @Body() categories: Partial<CategoriesInterface>,
+    ) {
         return this.categoriesService
             .update(id, categories)
-            .then((updatedCategory: Categories) => {
+            .then(async (updatedCategory: Categories) => {
+                if (categories.foods) {
+                    await this.foodCategoriesService.updateCategoriesFoods(
+                        id,
+                        categories.foods,
+                    );
+                }
+
                 return {
                     header: {
                         statusCode: HttpStatus.OK,

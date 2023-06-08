@@ -34,7 +34,7 @@ export class CategoriesService {
 
     async update(
         id: string,
-        categories: Partial<Categories>,
+        categories: Partial<CategoriesInterface>,
     ): Promise<Categories> {
         const existingCategory = await this.categoriesRepository.findOne({
             where: { id },
@@ -42,7 +42,9 @@ export class CategoriesService {
         if (!existingCategory) {
             throw new NotFoundException(`Categories with id ${id} not found`);
         }
-        await this.categoriesRepository.update(id, categories);
+        const updatedCategory = new Categories();
+        Object.assign(updatedCategory, categories);
+        await this.categoriesRepository.update(id, updatedCategory);
         return this.categoriesRepository.findOne({ where: { id } });
     }
 

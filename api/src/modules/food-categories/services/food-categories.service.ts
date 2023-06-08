@@ -3,8 +3,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 import { FoodCategories } from "../entities/food-categories.entity";
-import { Food } from "../../food/food.entity";
-import { Categories } from "../../categories/categories.entity";
 import { FoodService } from "../../food/food.service";
 import { CategoriesService } from "../../categories/categories.service";
 
@@ -15,7 +13,8 @@ export class FoodCategoriesService {
         private readonly foodCategoriesRepository: Repository<FoodCategories>,
         private readonly foodService: FoodService,
         private readonly categoriesService: CategoriesService,
-    ) {}
+    ) {
+    }
 
     async findAll(): Promise<FoodCategories[]> {
         return this.foodCategoriesRepository.find();
@@ -54,21 +53,40 @@ export class FoodCategoriesService {
         return this.foodCategoriesRepository.save(newFoodCategories);
     }
 
-    async update(
-        id: string,
-        foodCategories: Partial<FoodCategories>,
-    ): Promise<FoodCategories> {
-        const existingFoodCategories =
-            await this.foodCategoriesRepository.findOne({
-                where: { id },
+    async updateCategoriesFoods(
+        categoriesId: string,
+        newFoods: Array<string>,
+    ): Promise<FoodCategories[]> {
+        for (const foodId of newFoods) {
+            const foodExist = await this.foodCategoriesRepository.exist({
+                where: {
+                    food: {
+                        id: foodId,
+                    },
+                    categories: {
+                        id: categoriesId,
+                    },
+                },
             });
-        if (!existingFoodCategories) {
-            throw new NotFoundException(
-                `Food categories with id ${id} not found`,
+            if (foodExist) {
+                continue;
+            }
+
+            const newFoodCategories = new FoodCategories();
+            newFoodCategories.food = await this.foodService.findOne(foodId);
+            newFoodCategories.categories = await this.categoriesService.findOne(
+                categoriesId,
             );
+            await this.foodCategoriesRepository.insert(newFoodCategories);
         }
-        await this.foodCategoriesRepository.update(id, foodCategories);
-        return this.foodCategoriesRepository.findOne({ where: { id } });
+
+        return await this.foodCategoriesRepository.find({
+            where: {
+                categories: {
+                    id: categoriesId,
+                },
+            },
+        });
     }
 
     async delete(id: string): Promise<void> {
