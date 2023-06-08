@@ -3,13 +3,15 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Categories } from "./categories.entity";
 import { v4 as uuidv4 } from "uuid";
+import { CategoriesInterface } from "./categories.interface";
 
 @Injectable()
 export class CategoriesService {
     constructor(
         @InjectRepository(Categories)
         private readonly categoriesRepository: Repository<Categories>,
-    ) {}
+    ) {
+    }
 
     async findAll(): Promise<Categories[]> {
         return this.categoriesRepository.find();
@@ -23,7 +25,7 @@ export class CategoriesService {
         return categories;
     }
 
-    async create(categories: Partial<Categories>): Promise<Categories> {
+    async create(categories: CategoriesInterface): Promise<Categories> {
         const newCategory = new Categories();
         Object.assign(newCategory, categories);
         newCategory.id = uuidv4();
@@ -38,7 +40,7 @@ export class CategoriesService {
             where: { id },
         });
         if (!existingCategory) {
-            throw new NotFoundException(`Pet with id ${id} not found`);
+            throw new NotFoundException(`Categories with id ${id} not found`);
         }
         await this.categoriesRepository.update(id, categories);
         return this.categoriesRepository.findOne({ where: { id } });
@@ -49,5 +51,13 @@ export class CategoriesService {
         if (deleteResult.affected === 0) {
             throw new NotFoundException(`Categories with ID ${id} not found`);
         }
+    }
+
+    async findCategoriesByFoodId(foodId: string) {
+        return await this.categoriesRepository
+            .createQueryBuilder("categories")
+            .innerJoin("categories.foodCategories", "foodCategories")
+            .where("foodCategories.food = :foodId", { foodId })
+            .getMany();
     }
 }

@@ -10,10 +10,18 @@ import {
 } from "@nestjs/common";
 import { Categories } from "./categories.entity";
 import { CategoriesService } from "./categories.service";
+import { FoodService } from "../food/food.service";
+import { Food } from "../food/food.entity";
+import { CategoriesInterface } from "./categories.interface";
+import { FoodCategoriesService } from "../food-categories/services/food-categories.service";
 
 @Controller("categories")
 export class CategoriesController {
-    constructor(private readonly categoriesService: CategoriesService) {}
+    constructor(
+        private readonly categoriesService: CategoriesService,
+        private readonly foodService: FoodService,
+        private readonly foodCategoriesService: FoodCategoriesService
+    ) {}
 
     @Get()
     findAll() {
@@ -72,10 +80,19 @@ export class CategoriesController {
     }
 
     @Post()
-    create(@Body() categories: Partial<Categories>) {
+    create(@Body() categories: CategoriesInterface) {
         return this.categoriesService
             .create(categories)
-            .then((createdCategory: Categories) => {
+            .then(async (createdCategory: Categories) => {
+                if (categories.foods) {
+                    for (const foodId of categories.foods) {
+                        await this.foodCategoriesService.create(
+                            foodId,
+                            createdCategory.id,
+                        );
+                    }
+                }
+
                 return {
                     header: {
                         statusCode: HttpStatus.CREATED,
@@ -144,6 +161,35 @@ export class CategoriesController {
                     header: {
                         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
                         message: "Error deleting categories",
+                    },
+                    body: {
+                        error: error.message,
+                    },
+                };
+            });
+    }
+
+    @Get(":id/foods")
+    async findFoods(@Param("id") categoriesId: string) {
+        await this.categoriesService.findOne(categoriesId);
+        return this.foodService
+            .findFoodsByCategoriesId(categoriesId)
+            .then((foods: Food[]) => {
+                return {
+                    header: {
+                        statusCode: HttpStatus.OK,
+                        message: "Category foods retrieved successfully",
+                    },
+                    body: {
+                        data: foods,
+                    },
+                };
+            })
+            .catch((error) => {
+                return {
+                    header: {
+                        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+                        message: "Error retrieving category foods",
                     },
                     body: {
                         error: error.message,

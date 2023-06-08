@@ -3,6 +3,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Food } from "./food.entity";
 import { v4 as uuidv4 } from "uuid";
+import { FoodInterface } from "./food.interface";
+import { Categories } from "../categories/categories.entity";
 
 @Injectable()
 export class FoodService {
@@ -23,10 +25,12 @@ export class FoodService {
         return food;
     }
 
-    async create(food: Partial<Food>): Promise<Food> {
-        const newFood = new Food();
-        Object.assign(newFood, food);
-        newFood.id = uuidv4();
+    async create(food: FoodInterface): Promise<Food> {
+        const newFood = {
+            id: uuidv4(),
+            ...food,
+        };
+
         return this.foodRepository.save(newFood);
     }
 
@@ -35,7 +39,7 @@ export class FoodService {
             where: { id },
         });
         if (!existingFood) {
-            throw new NotFoundException(`Pet with id ${id} not found`);
+            throw new NotFoundException(`Food with id ${id} not found`);
         }
         await this.foodRepository.update(id, food);
         return this.foodRepository.findOne({ where: { id } });
@@ -46,5 +50,15 @@ export class FoodService {
         if (deleteResult.affected === 0) {
             throw new NotFoundException(`Food with ID ${id} not found`);
         }
+    }
+
+    async findFoodsByCategoriesId(categoriesId: string) {
+        return await this.foodRepository
+            .createQueryBuilder("foods")
+            .innerJoin("foods.foodCategories", "foodCategories")
+            .where("foodCategories.categories = :categoriesId", {
+                categoriesId,
+            })
+            .getMany();
     }
 }
