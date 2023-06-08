@@ -215,9 +215,7 @@ export class CategoriesController {
                     statusCode: HttpStatus.OK,
                     message: `Foods linked successfully to category with ID ${categoriesId}`,
                 },
-                body: {
-                    data: data,
-                },
+                body: data.body,
             };
         }
 

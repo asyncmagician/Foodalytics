@@ -6,7 +6,7 @@ import {
     Delete,
     Param,
     Body,
-    HttpStatus,
+    HttpStatus, BadRequestException,
 } from "@nestjs/common";
 import { Food } from "./food.entity";
 import { FoodService } from "./food.service";
@@ -195,6 +195,61 @@ export class FoodController {
                         error: error.message,
                     },
                 };
+            });
+    }
+
+    @Post(":id/categories")
+    async addCategoriesToFood(@Param("id") foodId: string, @Body() body) {
+        if (
+            body &&
+            body.categories &&
+            body.categories.constructor === Array<string>
+        ) {
+            for (const categoryId of body.categories) {
+                await this.foodCategoriesService.create(foodId, categoryId);
+            }
+
+            const data = await this.findCategories(foodId);
+
+            return {
+                header: {
+                    statusCode: HttpStatus.OK,
+                    message: `Categories linked successfully to food with ID ${foodId}`,
+                },
+                body: data.body,
+            };
+        }
+
+        throw new BadRequestException(
+            'The body of the request must consist of a "categories" array containing categories identifiers',
+        );
+    }
+
+    @Delete(":id/categories/delete-one")
+    deleteOneFoodCategories(@Param("id") foodId: string, @Body() body) {
+        if (
+            body &&
+            body.categoriesId &&
+            body.categoriesId.constructor === String
+        ) {
+            return this.foodCategoriesService.delete(foodId, body.categoriesId);
+        }
+
+        throw new BadRequestException(
+            'The body of the request must consist of a "categoriesId" string containing the category identifier to delete',
+        );
+    }
+
+    @Delete(":id/categories/delete-all")
+    deleteAllFoodsToCategory(@Param("id") foodId: string) {
+        this.foodCategoriesService
+            .findAll(foodId)
+            .then(async (foodCategories) => {
+                for (const foodCategory of foodCategories) {
+                    await this.foodCategoriesService.deleteById(
+                        foodCategory.id,
+                    );
+                }
             });
     }
 }
