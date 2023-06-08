@@ -25,10 +25,10 @@ export class RegisterComponent {
       const formData = this.registerForm.value;
       this.http.post('http://localhost:3000/users', formData).subscribe(
         (response) => {
-          console.log('Envoi réussi :', response);
+          console.log('Data sent!', response);
         },
         (error) => {
-          console.error('Erreur lors de l\'envoi du formulaire :', error);
+          console.error('Error while sending the form', error);
         }
       );
     }
