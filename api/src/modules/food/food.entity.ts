@@ -1,9 +1,14 @@
-import { Entity, Column, ManyToOne, JoinTable, ManyToMany, PrimaryColumn } from "typeorm";
-import { Categories } from '../categories/categories.entity';
-import { User } from '../user/user.entity';
+import {
+    Entity,
+    Column,
+    ManyToOne,
+    PrimaryColumn,
+    OneToMany,
+} from "typeorm";
+import { User } from "../user/user.entity";
+import { FoodCategories } from "../food-categories/entities/food-categories.entity";
 
 @Entity()
-
 export class Food {
     @PrimaryColumn("uuid")
     id: string;
@@ -23,12 +28,9 @@ export class Food {
     @Column()
     carbohydates: number;
 
-    @ManyToMany(() => Categories, { nullable: true })
-    @JoinTable()
-    categories: Categories[];
+    @OneToMany(() => FoodCategories, (foodCategories) => foodCategories.food, { nullable: true })
+    foodCategories: FoodCategories[];
 
-    @ManyToOne(() => User, user => user.foods, { nullable: true })
+    @ManyToOne(() => User, (user) => user.foods, { nullable: true })
     user: User;
-
 }
-
