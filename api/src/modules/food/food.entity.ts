@@ -1,12 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinTable, ManyToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinTable, ManyToMany, PrimaryColumn } from "typeorm";
 import { Categories } from '../categories/categories.entity';
 import { User } from '../user/user.entity';
 
 @Entity()
 
 export class Food {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn("uuid")
+    id: string;
 
     @Column()
     name: string;

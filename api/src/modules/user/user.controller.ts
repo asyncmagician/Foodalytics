@@ -35,7 +35,7 @@ export class UserController {
     }
 
     @Get(":id")
-    findOne(@Param("id") id: number) {
+    findOne(@Param("id") id: string) {
         return this.userService
             .findOne(id)
             .then((user: User) => {
@@ -91,7 +91,7 @@ export class UserController {
     }
 
     @Put(":id")
-    update(@Param("id") id: number, @Body() user: Partial<User>) {
+    update(@Param("id") id: string, @Body() user: Partial<User>) {
         return this.userService
             .update(id, user)
             .then((updatedUser: User) => {
@@ -119,7 +119,7 @@ export class UserController {
     }
 
     @Delete(":id")
-    delete(@Param("id") id: number) {
+    delete(@Param("id") id: string) {
         return this.userService
             .delete(id)
             .then(() => {
