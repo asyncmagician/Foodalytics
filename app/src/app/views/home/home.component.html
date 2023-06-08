@@ -1,5 +1,5 @@
 <div class="container">
-  <div *ngIf="user">
+  <!-- <div *ngIf="user">
   <h1>Bienvenue, {{ user.firstName }}</h1>
   <span>Commencez à suivre vos repas et vos calories <a routerLink="/tableau-de-bord">dès maintenant!</a></span>
 
@@ -8,15 +8,15 @@
       <span><a class="premium" routerLink="">Acheter Premium 👑</a></span>
     </div>
   </div>
-</div>
+</div> -->
 
 <div class="row mt-2">
   <div class="col-6 d-flex align-items-center">
-    <p>Bienvenue sur <span class="brand">Foodalytics</span>, votre application web ultime pour suivre et analyser votre alimentation de manière simple et efficace ! Avec Foodalytics, vous pouvez prendre le contrôle total de votre régime alimentaire en suivant précisément vos apports nutritionnels et en analysant votre consommation sur une période donnée. Découvrez comment cette application révolutionnaire peut vous aider à atteindre vos objectifs santé et bien-être.
+    <p class="welcome-text">Bienvenue sur <span class="brand">Foodalytics</span>, votre application web ultime pour suivre et analyser votre alimentation de manière simple et efficace ! Avec Foodalytics, vous pouvez prendre le contrôle total de votre régime alimentaire en suivant précisément vos apports nutritionnels et en analysant votre consommation sur une période donnée. Découvrez comment cette application révolutionnaire peut vous aider à atteindre vos objectifs santé et bien-être.
   </p>
       </div>
       <div class="col-6">
-        <img [src]="getRandomImageUrl()" alt="Korean Meal Example">
+        <img [src]="getRandomImageUrl()" class="foodImg" alt="Korean Meal Example">
   </div>
 </div>
 
