@@ -6,7 +6,7 @@ import {
     Delete,
     Param,
     Body,
-    HttpStatus,
+    HttpStatus, BadRequestException,
 } from "@nestjs/common";
 import { Categories } from "./categories.entity";
 import { CategoriesService } from "./categories.service";
@@ -20,7 +20,7 @@ export class CategoriesController {
     constructor(
         private readonly categoriesService: CategoriesService,
         private readonly foodService: FoodService,
-        private readonly foodCategoriesService: FoodCategoriesService
+        private readonly foodCategoriesService: FoodCategoriesService,
     ) {}
 
     @Get()
@@ -123,14 +123,7 @@ export class CategoriesController {
     ) {
         return this.categoriesService
             .update(id, categories)
-            .then(async (updatedCategory: Categories) => {
-                if (categories.foods) {
-                    await this.foodCategoriesService.updateCategoriesFoods(
-                        id,
-                        categories.foods,
-                    );
-                }
-
+            .then((updatedCategory: Categories) => {
                 return {
                     header: {
                         statusCode: HttpStatus.OK,
@@ -205,6 +198,55 @@ export class CategoriesController {
                         error: error.message,
                     },
                 };
+            });
+    }
+
+    @Post(":id/foods")
+    async addFoodsToCategory(@Param("id") categoriesId: string, @Body() body) {
+        if (body && body.foods && body.foods.constructor === Array<string>) {
+            for (const foodId of body.foods) {
+                await this.foodCategoriesService.create(foodId, categoriesId);
+            }
+
+            const data = await this.findFoods(categoriesId);
+
+            return {
+                header: {
+                    statusCode: HttpStatus.OK,
+                    message: `Foods linked successfully to category with ID ${categoriesId}`,
+                },
+                body: {
+                    data: data,
+                },
+            };
+        }
+
+        throw new BadRequestException(
+            'The body of the request must consist of a "foods" array containing food identifiers',
+        );
+    }
+
+    @Delete(":id/foods/delete-one")
+    deleteOneFoodCategories(@Param("id") categoriesId: string, @Body() body) {
+        if (body && body.foodId && body.foodId.constructor === String) {
+            return this.foodCategoriesService.delete(body.foodId, categoriesId);
+        }
+
+        throw new BadRequestException(
+            'The body of the request must consist of a "foodId" string containing the food identifier to delete',
+        );
+    }
+
+    @Delete(":id/foods/delete-all")
+    deleteAllFoodsToCategory(@Param("id") categoriesId: string) {
+        this.foodCategoriesService
+            .findAll(undefined, categoriesId)
+            .then(async (foodCategories) => {
+                for (const foodCategory of foodCategories) {
+                    await this.foodCategoriesService.deleteById(
+                        foodCategory.id,
+                    );
+                }
             });
     }
 }
