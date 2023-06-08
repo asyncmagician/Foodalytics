@@ -15,13 +15,17 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {MatCardModule} from "@angular/material/card";
+import { DashboardComponent } from './views/dashboard/dashboard.component';
+import { RegisterComponent } from './views/register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     Page404Component,
-    LoginComponent
+    LoginComponent,
+    DashboardComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

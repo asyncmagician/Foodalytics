@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToMany, JoinTable, ManyToOne, PrimaryColumn } from "typeorm";
 import { Food } from '../food/food.entity';
 import { User } from '../user/user.entity';
 
@@ -11,8 +11,8 @@ export enum CategoryChoice {
 @Entity()
 
 export class Categories {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn("uuid")
+    id: string;
 
     @Column({
         type: 'enum',

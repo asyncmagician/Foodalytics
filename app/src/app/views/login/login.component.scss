@@ -1,5 +1,11 @@
-form mat-form-field {
+form {
+.green-button {
+  background-color: #2979299d;
+  color: white;
+}
+mat-form-field {
   width: 50%;
   min-width: 200px;
   max-width: 400px;
+}
 }

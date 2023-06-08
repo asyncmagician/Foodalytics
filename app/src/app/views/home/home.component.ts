@@ -1,33 +1,64 @@
-import {Component} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {AuthentificationService} from "../../services/authentification.service";
-import {Jwt} from "../../models/Jwt";
-import {Food} from "../../models/Food";
+import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { AuthentificationService } from '../../services/authentification.service';
+import { Jwt } from '../../models/Jwt';
+import { User } from '../../models/User';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  foodList: Food[] = [];
+  user: any;
   jwt: Jwt | null = null;
+  imageUrls: string[] = [
+    'https://images4.alphacoders.com/786/786697.jpg',
+    'https://images7.alphacoders.com/110/1103153.jpg',
+    'https://images2.alphacoders.com/130/130202.jpg',
+    'https://images3.alphacoders.com/227/227305.jpg',
+    'https://images2.alphacoders.com/276/276650.jpg',
+    'https://images4.alphacoders.com/263/263186.jpg',
+    'https://images4.alphacoders.com/215/21574.jpg',
+    'https://images4.alphacoders.com/276/276924.jpg',
+    'https://images7.alphacoders.com/304/304627.jpg',
+  ];
 
-  constructor(private http: HttpClient, private auth: AuthentificationService) {
+  constructor(
+    private http: HttpClient,
+    private auth: AuthentificationService,
+    private sanitizer: DomSanitizer
+  ) {
     this.refresh();
-    this.auth.$jwt.subscribe(jwt => this.jwt = jwt)
+    this.auth.$jwt.subscribe((jwt) => (this.jwt = jwt));
+  }
+
+  getRandomImageUrl(): SafeResourceUrl {
+    const randomIndex = Math.floor(Math.random() * this.imageUrls.length);
+    const randomUrl = this.imageUrls[randomIndex];
+    return this.sanitizer.bypassSecurityTrustResourceUrl(randomUrl);
+  }
+
+  ngOnInit() {
+    this.http
+      .get<any>('http://localhost:3000/users')
+      .subscribe(
+        (response) => {
+          this.user = response;
+        },
+        (error) => {
+          console.error(
+            'Une erreur s\'est produite lors de la récupération des informations utilisateur :',
+            error
+          );
+        }
+      );
   }
 
   refresh() {
     this.http
-      .get<Food[]>('http://localhost:3000/foods')
-      .subscribe((foodList) => (this.foodList = foodList));
-  }
-
-  onFoodDelete(foodId: string) {
-    this.http.delete('http://localhost:3000/article/' + foodId).subscribe({
-      next: () => this.refresh(),
-      error: (response) => console.log(response),
-    });
+      .get<User[]>('http://localhost:3000/users')
+      .subscribe((user) => (this.user = user));
   }
 }

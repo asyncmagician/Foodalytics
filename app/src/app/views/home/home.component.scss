@@ -1,0 +1,70 @@
+a {
+    color: #097609b4;
+    text-decoration: none;
+}
+
+p.welcome-text {
+  font-size: 1.1rem;
+  font-style: oblique;
+}
+
+img.foodImg {
+  border-radius: 55%
+}
+
+.premium-card {
+    background-color: #191b191d;
+    border: 1px solid #40ff0038;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 10px;
+  }
+  
+  .card-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  div.row {
+    p {
+      .brand {
+        font-weight: bold;
+      }
+    }
+    
+    img {
+      max-width: 100%;
+      height: 50vh;
+      margin-left: 20px;
+    }
+  }
+
+  h3 {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+  
+  div.userReview {
+  img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  p {
+    color: #6c757d;
+    font-style: italic;
+    margin-bottom: 0;
+  }
+}
+
+.brand {
+  background: linear-gradient(to right, #252f0a, #10b1107d); 
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+  
+
+  
