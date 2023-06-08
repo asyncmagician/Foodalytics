@@ -1,4 +1,23 @@
-nav a img.logo {
-  width: 36px;
-  height: 36px;
-}
+nav {
+  background-color: #0d7d0560;
+  a {
+    color: #000000;
+    img.logo {
+      width: 36px;
+      height: 36px;
+    }
+  } 
+
+  .active {
+    color: #378424 !important;
+  }  
+  
+  .gradient-text {
+    background: linear-gradient(to right, #252f0a, #10b1107d); 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+} 
+
+

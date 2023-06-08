@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {AuthentificationService} from "../../services/authentification.service";
 import {Jwt} from "../../models/Jwt";
-import {Food} from "../../models/Food";
+import {User} from "../../models/User";
 
 @Component({
   selector: 'app-home',
@@ -10,7 +10,7 @@ import {Food} from "../../models/Food";
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  foodList: Food[] = [];
+  user: any;
   jwt: Jwt | null = null;
 
   constructor(private http: HttpClient, private auth: AuthentificationService) {
@@ -18,16 +18,20 @@ export class HomeComponent {
     this.auth.$jwt.subscribe(jwt => this.jwt = jwt)
   }
 
+  ngOnInit() {
+    this.http.get<any>('http://localhost:3000/users').subscribe(
+      response => {
+        this.user = response;
+      },
+      error => {
+        console.error('Une erreur s\'est produite lors de la récupération des informations utilisateur :', error);
+      }
+    );
+  }
+  
   refresh() {
     this.http
-      .get<Food[]>('http://localhost:3000/foods')
-      .subscribe((foodList) => (this.foodList = foodList));
-  }
-
-  onFoodDelete(foodId: string) {
-    this.http.delete('http://localhost:3000/article/' + foodId).subscribe({
-      next: () => this.refresh(),
-      error: (response) => console.log(response),
-    });
+      .get<User[]>('http://localhost:3000/users')
+      .subscribe((user) => (this.user = user));
   }
 }
