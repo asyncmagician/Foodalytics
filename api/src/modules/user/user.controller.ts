@@ -34,19 +34,19 @@ export class UserController {
         };
     }
 
-    @Post("logout")
+    @Post('logout')
     async logout(@Req() request: Request) {
       const authorizationHeader = request.headers['authorization'];
-      const token = authorizationHeader.split('Bearer ')[1]; 
-    
+      const token = authorizationHeader.split('Bearer ')[1];
+  
       await this.authService.revokeToken(token);
-    
+  
       return {
         header: {
           statusCode: HttpStatus.OK,
-          message: "Logout successful",
+          message: 'Logout successful',
         },
-      };
+      };  
     }
     
 
