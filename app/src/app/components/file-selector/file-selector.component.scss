@@ -1,0 +1,16 @@
+.img-selector {
+  display: flex;
+  align-items: center;
+
+  input {
+    display: none;
+  }
+
+  span {
+    margin: 0 10px;
+  }
+
+  img {
+    max-height: 30px;
+  }
+}

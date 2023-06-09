@@ -1,4 +1,4 @@
-<a *ngIf="jwt" mat-raised-button color="primary" routerLink="/ajout-article">
+<a *ngIf="jwt" mat-raised-button class="green-button mb-4" routerLink="/ajout-article">
   Ajouter un article
 </a>
 
@@ -26,7 +26,7 @@
         </p>
       </mat-card-content>
       <mat-card-actions *ngIf="jwt?.isAdmin">
-        <a mat-button color="primary" [routerLink]="['/modifier-produit', food.id]" class="me-2">Modifier</a>
+        <a mat-button color="primary" [routerLink]="['/modifier-article', food.id]" class="me-2">Modifier</a>
         <button mat-button color="warn" (click)="onFoodDelete(food.id)">Supprimer</button>
       </mat-card-actions>
     </mat-card>

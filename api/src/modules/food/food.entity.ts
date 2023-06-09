@@ -28,6 +28,9 @@ export class Food {
     @Column()
     carbohydates: number;
 
+    @Column()
+    img: string;
+
     @OneToMany(() => FoodCategories, (foodCategories) => foodCategories.food, { nullable: true })
     foodCategories: FoodCategories[];
 

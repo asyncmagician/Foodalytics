@@ -20,6 +20,10 @@ export class FoodInterface {
     @IsNumber()
     carbohydates: number;
 
+    @IsString()
+    @IsOptional()
+    img: string;
+
     @ArrayMinSize(1)
     @IsString({ each: true })
     @IsOptional()

@@ -18,6 +18,8 @@ import {MatCardModule} from "@angular/material/card";
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { RegisterComponent } from './views/register/register.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { ProductEditComponent } from "./views/product-edit/product-edit.component";
+import { FileSelectorComponent } from "./components/file-selector/file-selector.component";
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { AlertComponent } from './components/alert/alert.component';
     LoginComponent,
     DashboardComponent,
     RegisterComponent,
-    AlertComponent
+    AlertComponent,
+    ProductEditComponent,
+    FileSelectorComponent
   ],
   imports: [
     BrowserModule,

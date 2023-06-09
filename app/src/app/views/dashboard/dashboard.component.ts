@@ -14,8 +14,8 @@ export class DashboardComponent {
   jwt: Jwt | null = null;
 
   constructor(private http: HttpClient, private auth: AuthentificationService) {
-    this.refresh();
     this.auth.$jwt.subscribe(jwt => this.jwt = jwt)
+    this.refresh();
   }
 
   refresh() {
@@ -27,14 +27,16 @@ export class DashboardComponent {
           }
         })
         .subscribe({
-          next: (response) => this.foodList = response.body.data
+          next: (response) => {
+            this.foodList = response.body.data
+          }
         });
     }
   }
 
   onFoodDelete(foodId: string) {
     if (this.jwt) {
-      this.http.delete('http://localhost:3000/article/' + foodId, {
+      this.http.delete('http://localhost:3000/foods/' + foodId, {
         headers: {
           'Authorization': 'Bearer ' + this.jwt.token
         }

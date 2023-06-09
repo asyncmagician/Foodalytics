@@ -1,0 +1,16 @@
+<div class="img-selector">
+  <input #inputFile type="file" (change)="onFileChange($event)" />
+
+  <button mat-mini-fab (click)="$event.preventDefault(); inputFile.click()">
+    <mat-icon>attach_file</mat-icon>
+  </button>
+
+  <span>
+    {{ selectedFile?.name || nonSelectedFileText }}
+  </span>
+
+  <img
+    *ngIf="src != null && src != ''"
+    [src]="src"
+  />
+</div>
