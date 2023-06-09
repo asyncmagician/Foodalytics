@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import {Jwt} from "./models/Jwt";
 import {AuthentificationService} from "./services/authentification.service";
 import { ActivatedRoute } from "@angular/router";
 import { Message } from "./models/Message";
+import { Jwt } from "./models/Jwt";
 
 @Component({
   selector: 'app-root',

@@ -1,50 +1,34 @@
 <a *ngIf="jwt" mat-raised-button color="primary" routerLink="/ajout-article">
-    Ajouter un article
-  </a>
-  
-  <div class="row">
-    <div *ngFor="let food of foodList" class="col-6">
-      <mat-card class="mt-4">
-        <mat-card-header>
-          <div mat-card-avatar></div>
-          <mat-card-title>{{ food.name }}</mat-card-title>
-          <mat-card-subtitle>#{{ food.id }}</mat-card-subtitle>
-        </mat-card-header>
-        <img
-          *ngIf="food.img"
-          mat-card-image
-          src="http://localhost:3000/{{ food.img }}"
-          alt="Image du produit"
-        />
-        <mat-card-content>
-          <p>
-            Calories : <span>{{ food.calorie }}</span>
-            <br>
-            Lipides : <span>{{ food.lipid }}</span>
-            <br>
-            Glucides : <span>{{ food.carbohydrate }}</span>
-            <br>
-            Protéines : <span>{{ food.protein }}</span>
-          </p>
-        </mat-card-content>
-        <mat-card-actions>
-          <a
-            *ngIf="jwt?.admin"
-            mat-button
-            color="primary"
-            [routerLink]="['/modifier-produit', food.id]"
-          >Modifier</a
-          >
-          <button
-            *ngIf="jwt?.admin"
-            mat-button
-            color="warn"
-            (click)="onFoodDelete(food.id)"
-          >
-            Supprimer
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
+  Ajouter un article
+</a>
+
+<div class="row">
+  <div *ngFor="let food of foodList" class="col-3">
+    <mat-card class="mb-4">
+      <mat-card-header class="mb-2 pt-2">
+        <mat-card-title>{{ food.name }}</mat-card-title>
+      </mat-card-header>
+      <img
+        *ngIf="food.img"
+        mat-card-image
+        src="http://localhost:3000/{{ food.img }}"
+        alt="Image du produit"
+      />
+      <mat-card-content>
+        <p>
+          Calories : <span>{{ food.calories }}</span>
+          <br>
+          Lipides : <span>{{ food.lipids }}</span>
+          <br>
+          Glucides : <span>{{ food.carbohydates }}</span>
+          <br>
+          Protéines : <span>{{ food.proteins }}</span>
+        </p>
+      </mat-card-content>
+      <mat-card-actions *ngIf="jwt?.isAdmin">
+        <a mat-button color="primary" [routerLink]="['/modifier-produit', food.id]" class="me-2">Modifier</a>
+        <button mat-button color="warn" (click)="onFoodDelete(food.id)">Supprimer</button>
+      </mat-card-actions>
+    </mat-card>
   </div>
-  
+</div>

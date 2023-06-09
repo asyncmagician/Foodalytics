@@ -27,7 +27,9 @@ export class LoginComponent {
         if (success) {
           this.router.navigateByUrl('/accueil');
         } else {
-          alert("Mauvais login / mot de passe")
+          this.router.navigate(['/connexion'], {
+            queryParams: { errorMessage: `Mauvais login / mot de passe` }
+          });
         }
       });
     }

@@ -15,9 +15,12 @@ export class AuthentificationService {
 
   login(user: { email: string; password: string }): Observable<boolean> {
     return new Observable<boolean>((resolve) => {
-      this.http.post('http://localhost:3000/auth/login', user).subscribe({
-        next: (reponse: any) => {
-          localStorage.setItem('jwt', reponse.token);
+      this.http.post<any>('http://localhost:3000/users/login', user).subscribe({
+        next: (response) => {
+          const jwt: Jwt = response.body;
+          localStorage.setItem('jwt', jwt.token);
+          localStorage.setItem('isAdmin', String(jwt.isAdmin));
+          localStorage.setItem('userId', jwt.userId);
           this.readJwtLocalStorage();
           resolve.next(true);
           resolve.complete();
@@ -32,17 +35,18 @@ export class AuthentificationService {
 
   logout() {
     localStorage.removeItem('jwt');
+    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('userId');
     this.$jwt.next(null);
   }
 
   private readJwtLocalStorage() {
-    const jwt = localStorage.getItem('jwt');
+    const token = localStorage.getItem('jwt');
+    const isAdmin = Boolean(localStorage.getItem('isAdmin'));
+    const userId = localStorage.getItem('userId');
 
-    if (jwt != null) {
-      const partieDataBase64 = jwt.split('.')[1];
-      const partieDataJson = window.atob(partieDataBase64);
-      const utilisateurJwt = JSON.parse(partieDataJson);
-      this.$jwt.next(utilisateurJwt);
+    if (token && isAdmin !== null && userId) {
+      this.$jwt.next({ token, isAdmin, userId });
     } else {
       this.$jwt.next(null);
     }

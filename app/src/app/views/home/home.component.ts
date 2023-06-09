@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthentificationService } from '../../services/authentification.service';
 import { Jwt } from '../../models/Jwt';
-import { User } from '../../models/User';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
@@ -30,8 +29,8 @@ export class HomeComponent {
     private auth: AuthentificationService,
     private sanitizer: DomSanitizer
   ) {
-    this.refresh();
     this.auth.$jwt.subscribe((jwt) => (this.jwt = jwt));
+    this.refresh();
   }
 
   getRandomImageUrl(): SafeResourceUrl {
@@ -41,24 +40,28 @@ export class HomeComponent {
   }
 
   ngOnInit() {
-    this.http
-      .get<any>('http://localhost:3000/users')
-      .subscribe(
-        (response) => {
-          this.user = response;
-        },
-        (error) => {
-          console.error(
-            'Une erreur s\'est produite lors de la récupération des informations utilisateur :',
-            error
-          );
-        }
-      );
+    this.refresh();
   }
 
   refresh() {
-    this.http
-      .get<User[]>('http://localhost:3000/users')
-      .subscribe((user) => (this.user = user));
+    if (this.jwt) {
+      this.http
+        .get<any>('http://localhost:3000/users/' + this.jwt.userId, {
+          headers: {
+            'Authorization': 'Bearer ' + this.jwt.token
+          }
+        })
+        .subscribe(
+          (response) => {
+            this.user = response.body.data;
+          },
+          (error) => {
+            console.error(
+              'Une erreur s\'est produite lors de la récupération des informations utilisateur :',
+              error.message
+            );
+          }
+        );
+    }
   }
 }

@@ -29,7 +29,8 @@ export class UserController {
             },
             body: {
                 token,
-                isAdmin
+                isAdmin,
+                userId: user.id
             },
         };
     }

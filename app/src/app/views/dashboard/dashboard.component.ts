@@ -19,15 +19,29 @@ export class DashboardComponent {
   }
 
   refresh() {
-    this.http
-      .get<Food[]>('http://localhost:3000/foods')
-      .subscribe((foodList) => (this.foodList = foodList));
+    if (this.jwt) {
+      this.http
+        .get<any>('http://localhost:3000/foods', {
+          headers: {
+            'Authorization': 'Bearer ' + this.jwt.token
+          }
+        })
+        .subscribe({
+          next: (response) => this.foodList = response.body.data
+        });
+    }
   }
 
   onFoodDelete(foodId: string) {
-    this.http.delete('http://localhost:3000/article/' + foodId).subscribe({
-      next: () => this.refresh(),
-      error: (response) => console.log(response),
-    });
+    if (this.jwt) {
+      this.http.delete('http://localhost:3000/article/' + foodId, {
+        headers: {
+          'Authorization': 'Bearer ' + this.jwt.token
+        }
+      }).subscribe({
+        next: () => this.refresh(),
+        error: (response) => console.log(response),
+      });
+    }
   }
 }

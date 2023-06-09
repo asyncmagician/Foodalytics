@@ -1,16 +1,8 @@
 <div class="container">
-  <!-- <div *ngIf="user">
-  <h1>Bienvenue, {{ user.firstName }}</h1>
-  <span>Commencez à suivre vos repas et vos calories <a routerLink="/tableau-de-bord">dès maintenant!</a></span>
-
-  <div class="premium-card">
-    <div class="card-content">
-      <span><a class="premium" routerLink="">Acheter Premium 👑</a></span>
-    </div>
+  <div *ngIf="user" class="mb-4">
+    <h1>Bienvenue, {{ user.firstName }}</h1>
+    <span>Commencez à suivre vos repas et vos calories <a routerLink="/tableau-de-bord">dès maintenant!</a></span>
   </div>
-</div> -->
-
-<div class="container">
   <div class="row mt-2">
     <div class="col-md-6 d-flex align-items-center">
       <p class="welcome-text">Bienvenue sur <span class="brand">Foodalytics</span>, votre application web ultime pour suivre et analyser votre alimentation de manière simple et efficace ! Avec Foodalytics, vous pouvez prendre le contrôle total de votre régime alimentaire en suivant précisément vos apports nutritionnels et en analysant votre consommation sur une période donnée. Découvrez comment cette application révolutionnaire peut vous aider à atteindre vos objectifs santé et bien-être.</p>

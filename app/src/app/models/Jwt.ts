@@ -1,4 +1,5 @@
 export interface Jwt {
-  admin: boolean;
-  email: string;
+  isAdmin: boolean;
+  token: string;
+  userId: string;
 }
