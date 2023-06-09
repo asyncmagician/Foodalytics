@@ -6,7 +6,7 @@ import {
     Delete,
     Param,
     Body,
-    HttpStatus, BadRequestException,
+    HttpStatus, BadRequestException, UseGuards,
 } from "@nestjs/common";
 import { Food } from "./food.entity";
 import { FoodService } from "./food.service";
@@ -14,6 +14,7 @@ import { FoodCategoriesService } from "../food-categories/services/food-categori
 import { FoodInterface } from "./food.interface";
 import { Categories } from "../categories/categories.entity";
 import { CategoriesService } from "../categories/categories.service";
+import { JwtAuthGuard } from "src/strategies/jwt/jwt-auth.guard";
 
 @Controller("foods")
 export class FoodController {
@@ -23,6 +24,7 @@ export class FoodController {
         private readonly categoriesService: CategoriesService,
     ) {}
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     findAll() {
         return this.foodService
@@ -51,6 +53,7 @@ export class FoodController {
             });
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(":id")
     findOne(@Param("id") id: string) {
         return this.foodService
@@ -79,6 +82,7 @@ export class FoodController {
             });
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post()
     async create(@Body() food: FoodInterface) {
         return this.foodService
@@ -116,6 +120,7 @@ export class FoodController {
             });
     }
 
+    @UseGuards(JwtAuthGuard)
     @Put(":id")
     update(@Param("id") id: string, @Body() food: Partial<FoodInterface>) {
         return this.foodService
@@ -144,6 +149,7 @@ export class FoodController {
             });
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(":id")
     delete(@Param("id") id: string) {
         return this.foodService
@@ -169,6 +175,7 @@ export class FoodController {
             });
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(":id/categories")
     async findCategories(@Param("id") foodId: string) {
         await this.foodService.findOne(foodId);
@@ -198,6 +205,7 @@ export class FoodController {
             });
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post(":id/categories")
     async addCategoriesToFood(@Param("id") foodId: string, @Body() body) {
         if (
@@ -225,6 +233,7 @@ export class FoodController {
         );
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(":id/categories/delete-one")
     deleteOneFoodCategories(@Param("id") foodId: string, @Body() body) {
         if (
@@ -240,6 +249,7 @@ export class FoodController {
         );
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(":id/categories/delete-all")
     deleteAllFoodsToCategory(@Param("id") foodId: string) {
         this.foodCategoriesService

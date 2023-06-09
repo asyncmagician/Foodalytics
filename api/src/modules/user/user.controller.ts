@@ -1,11 +1,56 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, HttpStatus, HttpCode } from "@nestjs/common";
+import { Controller, Get, Post, Put, Delete, Param, Body, HttpStatus, HttpCode, UseGuards, UnauthorizedException, NotFoundException, Req } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { User } from './user.entity';
+import { JwtAuthGuard } from "../../strategies/jwt/jwt-auth.guard";
+import { AuthService } from "../auth/auth.service";
+import * as bcrypt from 'bcrypt';
+import { Request } from "express";
 
 @Controller("users")
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    userRepository: any;
+    constructor(private readonly userService: UserService, private readonly authService: AuthService) {}
 
+    @Post("login")
+    async login(@Body() credentials: { email: string; password: string }) {
+        const user = await this.userService.findByEmail(credentials.email);
+
+        if (!user || !(await bcrypt.compare(credentials.password, user.password))) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
+
+        const token = this.authService.generateToken(user);
+        const isAdmin = user.isAdmin;
+
+        return {
+            header: {
+                statusCode: HttpStatus.OK,
+                message: "Login successful",
+            },
+            body: {
+                token,
+                isAdmin
+            },
+        };
+    }
+
+    @Post("logout")
+    async logout(@Req() request: Request) {
+      const authorizationHeader = request.headers['authorization'];
+      const token = authorizationHeader.split('Bearer ')[1]; 
+    
+      await this.authService.revokeToken(token);
+    
+      return {
+        header: {
+          statusCode: HttpStatus.OK,
+          message: "Logout successful",
+        },
+      };
+    }
+    
+
+    @UseGuards(JwtAuthGuard)
     @Get()
     findAll() {
         return this.userService
@@ -34,6 +79,7 @@ export class UserController {
             });
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(":id")
     findOne(@Param("id") id: string) {
         return this.userService
@@ -90,6 +136,7 @@ export class UserController {
             });
     }
 
+    @UseGuards(JwtAuthGuard)
     @Put(":id")
     update(@Param("id") id: string, @Body() user: Partial<User>) {
         return this.userService
@@ -118,6 +165,7 @@ export class UserController {
             });
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(":id")
     delete(@Param("id") id: string) {
         return this.userService

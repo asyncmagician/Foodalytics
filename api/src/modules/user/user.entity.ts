@@ -17,6 +17,9 @@ export class User {
     @IsEmail({}, { message: "Invalid email format" })
     email: string;
 
+    @Column({ default: false })
+    isAdmin: boolean;
+
     @Column()
     @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/, {
         message: "Invalid password format",

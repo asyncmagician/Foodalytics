@@ -25,6 +25,14 @@ export class UserService {
         return user;
     }
 
+    async findByEmail(email: string): Promise<User> {
+        const user = await this.userRepository.findOne({ where: { email } });
+        if (!user) {
+            throw new NotFoundException(`User with email ${email} not found`);
+        }
+        return user;
+    }
+
     async create(user: Partial<User>): Promise<User> {
         const hashedPassword = await bcrypt.hash(user.password, 10);
         const newUser = {
