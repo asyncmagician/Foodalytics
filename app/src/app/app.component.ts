@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import {Jwt} from "./models/Jwt";
 import {AuthentificationService} from "./services/authentification.service";
+import { ActivatedRoute } from "@angular/router";
+import { Message } from "./models/Message";
 
 @Component({
   selector: 'app-root',
@@ -10,9 +12,22 @@ import {AuthentificationService} from "./services/authentification.service";
 export class AppComponent {
 
   jwt: Jwt | null = null;
+  message: Message | null = null;
 
-  constructor(private auth: AuthentificationService){
+  constructor(
+    private auth: AuthentificationService,
+    private route: ActivatedRoute
+  ){
     this.auth.$jwt.subscribe((jwt) => this.jwt = jwt);
+    this.route.queryParams.subscribe((params) => {
+      if (params['errorMessage'] || params['successMessage'] || params['infoMessage']) {
+        this.message = {
+          error: params['errorMessage'],
+          success: params['successMessage'],
+          info: params['infoMessage']
+        };
+      }
+    });
   }
 
   onLogout() {

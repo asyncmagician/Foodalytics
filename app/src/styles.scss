@@ -1,18 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { 
-    margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; 
+body {
+  margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
 
-footer {
+  footer {
     background-color: #0d7d0560;
 
     p {
-    font-weight:lighter;
-    font-size: 1.5rem;
-    background: linear-gradient(to right, #000000, #ffffff7d); 
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+      font-weight: lighter;
+      font-size: 1.5rem;
+      background: linear-gradient(to right, #000000, #ffffff7d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-}
+  }
 }

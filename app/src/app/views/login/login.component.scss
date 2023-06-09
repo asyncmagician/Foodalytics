@@ -1,11 +1,21 @@
 form {
-.green-button {
-  background-color: #2979299d;
-  color: white;
-}
-mat-form-field {
-  width: 50%;
-  min-width: 200px;
-  max-width: 400px;
-}
+  .green-button {
+    background-color: #2979299d;
+    color: white;
+  }
+
+  mat-form-field {
+    width: 50%;
+    min-width: 200px;
+    max-width: 400px;
+  }
+
+  span.second-choice-separator {
+    letter-spacing: 4px;
+  }
+
+  a.register-btn {
+    color: #2D2D2D;
+    max-height: 32px;
+  }
 }

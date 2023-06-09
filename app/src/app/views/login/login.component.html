@@ -13,5 +13,11 @@
     <mat-error>Le mot de passe est obligatoire</mat-error>
   </mat-form-field>
 
-  <button mat-raised-button type="submit" color="primary" class="green-button mt-4">Se connecter</button>
+  <div class="d-flex flex-column align-items-center justify-content-center">
+    <button mat-raised-button type="submit" color="primary" class="green-button mt-4">Se connecter</button>
+    <hr class="w-75 mt-4 mb-2">
+    <span class="second-choice-separator">OU</span>
+    <hr class="w-75 mt-2 mb-4">
+    <a mat-stroked-button routerLink="/inscription" class="register-btn w-75">S'inscrire</a>
+  </div>
 </form>
